@@ -23,15 +23,39 @@ def simulator(final_list):
             cust.append(i)
 
     customerBool(cust)
-
     return test-count  #number of customers left out
 
 def customerBool(cust):
     global customers
     customers = cust
 
+def isSatisfied(index, candidate):
+    pass
+
+def objective(index, candidate):
+    global customers
+    like_list = like_lines[index].strip().split()
+    dislike_list = dislike_lines[index].strip().split()
+    #add like, remove dislike
+    customers.remove(index)
+    for ing in like_list:
+        if ing in dislike.keys():
+            for i in dislike[ing]:
+                if i not in customers:
+                    customers.append(i)
+        
+    for ing in dislike_list:
+        if ing in like.keys():
+            for i in like[ing]:
+                if i not in customers:
+                    customers.append(i)
+    
+    customers = list(set(customers))
+
+
 def simulated_annealing(temp, best):
-    iterations = 10
+    global customers
+    iterations = 1000
     best_eval = simulator(best)
     curr, curr_eval = best, best_eval
     for j in range(iterations):
@@ -40,7 +64,8 @@ def simulated_annealing(temp, best):
         dislike_list = list(dislike_lines[i].strip().split())
         candidate = list(set(curr + like_list))
         candidate = [item for item in candidate if item not in dislike_list]
-        candidate_eval = simulator(candidate)
+        objective(i, candidate)
+        candidate_eval = len(customers)
         if (candidate_eval<best_eval):
             best, best_eval = candidate, candidate_eval
             #print('-->%d f(%s) = %.2f' % (i, str(best), best_eval))
@@ -56,7 +81,7 @@ def simulated_annealing(temp, best):
     count = len(best)
     ans = " ".join(best)
     print(count, end = " ")
-    print(ans)
+    print(best)
     print("Score: " + str(test-best_eval))
 	
 test = int(input())
