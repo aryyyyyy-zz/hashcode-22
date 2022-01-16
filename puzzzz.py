@@ -30,7 +30,15 @@ def customerBool(cust):
     customers = cust
 
 def isSatisfied(index, candidate):
-    pass
+    like_list = like_lines[index].strip().split()
+    dislike_list = dislike_lines[index].strip().split()
+    for ing in like_list:
+        if ing not in candidate:
+            return False
+    for ing in dislike_list:
+        if ing in candidate:
+            return False
+    return True
 
 def objective(index, candidate):
     global customers
@@ -43,12 +51,24 @@ def objective(index, candidate):
             for i in dislike[ing]:
                 if i not in customers:
                     customers.append(i)
-        
+                
+        if ing in like.keys():
+            for i in like[ing]:
+                if i in customers:
+                    if isSatisfied(i, candidate):
+                        customers.remove(i)
+
     for ing in dislike_list:
         if ing in like.keys():
             for i in like[ing]:
                 if i not in customers:
                     customers.append(i)
+
+        if ing in dislike.keys():
+            for i in dislike[ing]:
+                if i in customers:
+                    if isSatisfied(i, candidate):
+                        customers.remove(i)
     
     customers = list(set(customers))
 
@@ -79,9 +99,9 @@ def simulated_annealing(temp, best):
             curr, curr_eval = candidate, candidate_eval
         #print("Iteration: " + str(j) + "done")
     count = len(best)
-    ans = " ".join(best)
     print(count, end = " ")
-    print(best)
+    for ing in best:
+        print(ing, end= " ")
     print("Score: " + str(test-best_eval))
 	
 test = int(input())
