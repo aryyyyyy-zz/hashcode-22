@@ -84,7 +84,7 @@ def simulated_annealing(temp, best):
         candidate_eval = len(customers)
         if (candidate_eval<best_eval):
             best, best_eval = candidate, candidate_eval
-            print('-->%d f(%s) = %.2f' % (j, str(best), best_eval))
+            #print('-->%d f(%s) = %.2f' % (j, str(best), best_eval))
         diff = candidate_eval - curr_eval
         n = temp / float(j  + 1)
         try:
