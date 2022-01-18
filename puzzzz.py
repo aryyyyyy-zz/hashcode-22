@@ -4,8 +4,8 @@ import math
 
 #this is the objective function, we're looking for a minima
 def simulator(final_list):
+    global customers
     count = 0
-    cust = []
     for i in range(test):
         flag = True
         like_list = list(like_lines[i].strip().split())
@@ -20,14 +20,8 @@ def simulator(final_list):
         if flag:
             count+=1
         else:
-            cust.append(i)
+            customers.append(i)
 
-    customerBool(cust)
-    return test-count  #number of customers left out
-
-def customerBool(cust):
-    global customers
-    customers = cust
 
 def isSatisfied(index, candidate):
     like_list = like_lines[index].strip().split()
@@ -44,39 +38,41 @@ def objective(index, candidate):
     global customers
     like_list = like_lines[index].strip().split()
     dislike_list = dislike_lines[index].strip().split()
-    #add like, remove dislike
     customers.remove(index)
     for ing in like_list:
         if ing in dislike.keys():
             for i in dislike[ing]:
                 if i not in customers:
+                    #print(str(i) + " not satisfied because " + ing + " is present")
                     customers.append(i)
                 
-        if ing in like.keys():
-            for i in like[ing]:
-                if i in customers:
-                    if isSatisfied(i, candidate):
-                        customers.remove(i)
+        for i in like[ing]:
+            if i in customers:
+                if isSatisfied(i, candidate):
+                    #print(str(i) + " is satisfied")
+                    customers.remove(i)
 
     for ing in dislike_list:
         if ing in like.keys():
             for i in like[ing]:
                 if i not in customers:
+                    #print(str(i) + " not satisfied because " + ing + " is present")
                     customers.append(i)
 
-        if ing in dislike.keys():
-            for i in dislike[ing]:
-                if i in customers:
-                    if isSatisfied(i, candidate):
-                        customers.remove(i)
+        for i in dislike[ing]:
+            if i in customers:
+                if isSatisfied(i, candidate):
+                    #print(str(i) + " is satisfied ")
+                    customers.remove(i)
     
     customers = list(set(customers))
-
 
 def simulated_annealing(temp, best):
     global customers
     iterations = 1000
-    best_eval = simulator(best)
+    simulator(best)
+    best_eval = len(customers)
+    print("Through simulator: " + str(test - len(customers)))
     curr, curr_eval = best, best_eval
     for j in range(iterations):
         i = customers[random.randint(0, len(customers)-1)]
@@ -88,7 +84,7 @@ def simulated_annealing(temp, best):
         candidate_eval = len(customers)
         if (candidate_eval<best_eval):
             best, best_eval = candidate, candidate_eval
-            #print('-->%d f(%s) = %.2f' % (i, str(best), best_eval))
+            print('-->%d f(%s) = %.2f' % (j, str(best), best_eval))
         diff = candidate_eval - curr_eval
         n = temp / float(j  + 1)
         try:
@@ -97,7 +93,6 @@ def simulated_annealing(temp, best):
             prob = float('inf')
         if diff < 0 or random.random() < prob or candidate_eval<curr_eval :
             curr, curr_eval = candidate, candidate_eval
-        #print("Iteration: " + str(j) + "done")
     count = len(best)
     print(count, end = " ")
     for ing in best:
@@ -165,4 +160,6 @@ for key in score:
 
 final_ingredients = list(ans.strip().split())
 customers = []
-simulated_annealing(1, final_ingredients)
+simulated_annealing(10, final_ingredients)
+#simulator(final_ingredients)
+#print("Through simulator: " + str(test - len(customers)))
