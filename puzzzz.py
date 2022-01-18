@@ -97,13 +97,15 @@ def simulated_annealing(temp, best):
         print(ing, end= " ")
     print("Score: " + str(test-best_eval))
     simulator(best)
-    print("through sim: " + str(test - len(customers)) + "\n")
-    print("best eval: " + str(test - best_eval) + "\n")
+    print("through sim: " + str(test - len(customers)))
+    print("best eval: " + str(test - best_eval))
 	
 file1 = open("C:\\Users\\tarun\\Downloads\\hashcode\\hashcode-22\\d.txt", "r")
 lines = []
 for line in file1:
     lines.append(line)
+
+file1.close()
 
 test = int(lines[0][:-1])
 like = dict()
@@ -112,38 +114,35 @@ dislike = dict()
 like_lines = []
 dislike_lines = []
 
-i=1
-while(i<len(lines)):
+j = 1
+for i  in range(test):
 
-    line = lines[i][:-1]
+    line = lines[j][:-1]
     like_lines.append(line[2:])
     lineArr = list(line.strip().split())
 
     n = int(lineArr[0])
 
     for ingredient in lineArr[1:]:
-        if ingredient in like.keys():
+        if like.get(ingredient):
             like[ingredient].append(i)
         else:
-            like[ingredient] = []
-            like[ingredient].append(i)
+            like[ingredient] = [i]
 
-    i+=1
-    line2 = lines[i][:-1]
+    j += 1
+    line2 = lines[j][:-1]
     dislike_lines.append(line2[2:])
     lineArr2 = list(line2.strip().split())
 
     n2 = int(lineArr2[0])
 
     for ingredient in lineArr2[1:]:
-        if ingredient in dislike.keys():
+        if dislike.get(ingredient):
             dislike[ingredient].append(i)
         else:
-            dislike[ingredient] = []
-            dislike[ingredient].append(i)
+            dislike[ingredient] = [i]
 
-    i+=1
-
+    j += 1
 # print(like)
 # print(dislike)
 
