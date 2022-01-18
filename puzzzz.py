@@ -100,17 +100,22 @@ def simulated_annealing(temp, best):
     print("through sim: " + str(test - len(customers)) + "\n")
     print("best eval: " + str(test - best_eval) + "\n")
 	
-test = int(input())
+file1 = open("C:\\Users\\tarun\\Downloads\\hashcode\\hashcode-22\\d.txt", "r")
+lines = []
+for line in file1:
+    lines.append(line)
 
+test = int(lines[0][:-1])
 like = dict()
 dislike = dict()
 
 like_lines = []
 dislike_lines = []
 
-for i in range(test):
+i=1
+while(i<len(lines)):
 
-    line = input()
+    line = lines[i][:-1]
     like_lines.append(line[2:])
     lineArr = list(line.strip().split())
 
@@ -123,7 +128,8 @@ for i in range(test):
             like[ingredient] = []
             like[ingredient].append(i)
 
-    line2 = input()
+    i+=1
+    line2 = lines[i][:-1]
     dislike_lines.append(line2[2:])
     lineArr2 = list(line2.strip().split())
 
@@ -135,6 +141,8 @@ for i in range(test):
         else:
             dislike[ingredient] = []
             dislike[ingredient].append(i)
+
+    i+=1
 
 # print(like)
 # print(dislike)
@@ -162,3 +170,5 @@ for key in score:
 final_ingredients = list(ans.strip().split())
 customers = []
 simulated_annealing(10, final_ingredients)
+#simulator(final_ingredients)
+#print("Score: " + str(test - len(customers)))
