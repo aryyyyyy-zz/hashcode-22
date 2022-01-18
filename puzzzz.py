@@ -5,7 +5,7 @@ import math
 #this is the objective function, we're looking for a minima
 def simulator(final_list):
     global customers
-    count = 0
+    customers = []
     for i in range(test):
         flag = True
         like_list = list(like_lines[i].strip().split())
@@ -17,11 +17,8 @@ def simulator(final_list):
             if ing in final_list:
                 flag = False
 
-        if flag:
-            count+=1
-        else:
+        if not flag:
             customers.append(i)
-
 
 def isSatisfied(index, candidate):
     like_list = like_lines[index].strip().split()
@@ -72,7 +69,7 @@ def simulated_annealing(temp, best):
     iterations = 1000
     simulator(best)
     best_eval = len(customers)
-    print("Through simulator: " + str(test - len(customers)))
+    print("Through simulator: " + str(test - best_eval))
     curr, curr_eval = best, best_eval
     for j in range(iterations):
         i = customers[random.randint(0, len(customers)-1)]
@@ -84,9 +81,10 @@ def simulated_annealing(temp, best):
         candidate_eval = len(customers)
         if (candidate_eval<best_eval):
             best, best_eval = candidate, candidate_eval
-            #print('-->%d f(%s) = %.2f' % (j, str(best), best_eval))
+            score = test - best_eval
+            print('-->%d = %.2f' % (j, score))
         diff = candidate_eval - curr_eval
-        n = temp / float(j  + 1)
+        n = temp / float(j + 1)
         try:
             prob = math.exp(-diff / n)
         except OverflowError:
@@ -98,6 +96,9 @@ def simulated_annealing(temp, best):
     for ing in best:
         print(ing, end= " ")
     print("Score: " + str(test-best_eval))
+    simulator(best)
+    print("through sim: " + str(test - len(customers)) + "\n")
+    print("best eval: " + str(test - best_eval) + "\n")
 	
 test = int(input())
 
@@ -161,5 +162,3 @@ for key in score:
 final_ingredients = list(ans.strip().split())
 customers = []
 simulated_annealing(10, final_ingredients)
-#simulator(final_ingredients)
-#print("Through simulator: " + str(test - len(customers)))
