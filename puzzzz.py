@@ -31,8 +31,8 @@ def isSatisfied(index, candidate):
             return False
     return True
 
-def objective(index, candidate):
-    global customers
+def objective(index, candidate, customers):
+    
     like_list = like_lines[index].strip().split()
     dislike_list = dislike_lines[index].strip().split()
     customers.remove(index)
@@ -63,24 +63,27 @@ def objective(index, candidate):
                     customers.remove(i)
     
     customers = list(set(customers))
+    return customers
 
 def simulated_annealing(temp, best):
     global customers
+    tem = []
     iterations = 1000
     simulator(best)
     best_eval = len(customers)
     print("Through simulator: " + str(test - best_eval))
     curr, curr_eval = best, best_eval
-    for j in range(iterations):
+    for j in range(iterations): 
         i = customers[random.randint(0, len(customers)-1)]
         like_list = list(like_lines[i].strip().split())
         dislike_list = list(dislike_lines[i].strip().split())
         candidate = list(set(curr + like_list))
         candidate = [item for item in candidate if item not in dislike_list]
-        objective(i, candidate)
-        candidate_eval = len(customers)
+        tem = objective(i, candidate, customers)
+        candidate_eval = len(tem)
         if (candidate_eval<best_eval):
             best, best_eval = candidate, candidate_eval
+            customers = tem
             score = test - best_eval
             print('-->%d = %.2f' % (j, score))
         diff = candidate_eval - curr_eval
@@ -91,6 +94,7 @@ def simulated_annealing(temp, best):
             prob = float('inf')
         if diff < 0 or random.random() < prob or candidate_eval<curr_eval :
             curr, curr_eval = candidate, candidate_eval
+            customers = tem
     count = len(best)
     print(count, end = " ")
     for ing in best:
