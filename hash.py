@@ -43,7 +43,7 @@ def calculateFitness(gene):
     
 def getInput():
     #inputFile = open('C:\\Users\\ACER\\Desktop\\code\\hashcode\\c_coarse.in.txt', 'r')
-    inputFile = open('C:\\Users\\ACER\\Desktop\\code\\hashcode\\d_difficult.in.txt', 'r')
+    inputFile = open(FILE_PATH, 'r')
     NUMBER_OF_CUSTOMERS = int(inputFile.readline())
     # getting in put from file
     for i in range(NUMBER_OF_CUSTOMERS * 2):
@@ -138,7 +138,7 @@ def naturalSelection():
     return nextGeneration
 
 def mutate(gene):
-    if (random.random() < 0.001):
+    if (random.random() < MUTATION_RATE):
         randomInt = math.floor(random.random() * len(gene))
         if gene[randomInt] == '0':
             gene = gene[:randomInt] + '1' + gene[randomInt + 1: ]
@@ -158,6 +158,8 @@ INGREDIENT_LIKES = {}    # same as above for dislike
 PEOPLE_LIKES = {}        # key = people int, value = list of ingredients they like
 PEOPLE_DISLIKES = {}     # same as above for dislike
 
+FILE_PATH = 'C:\\Users\\ACER\\Desktop\\code\\hashcode\\d_difficult.in.txt'
+
 getInput()
 extractDataFromInput()
 
@@ -168,10 +170,11 @@ NUM_OF_INGREDIENTS = len(LIST_OF_INGREDIENTS)
 
 NUM_OF_GENERATIONS = 30
 currentGen = 0
-
+MUTATION_RATE = 1/100
 bestSolution = ""
+POPULATION_PER_GENERATION = 10000
 
-population = generateRandomPopulation(10000, NUM_OF_INGREDIENTS)
+population = generateRandomPopulation(POPULATION_PER_GENERATION, NUM_OF_INGREDIENTS)
 
 
 for i in range(NUM_OF_GENERATIONS):
@@ -180,9 +183,3 @@ for i in range(NUM_OF_GENERATIONS):
     
 print(bestSolution)
 print(calculateFitness(bestSolution))
-
-# print(LIST_OF_INGREDIENTS)
-# print(calculateFitness('1111001111'))
-# print(crossover('11111', '00000'))
-
-# tfeej vxglq byyii akuof luncl xdozp dlust xveqd
